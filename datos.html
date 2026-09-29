@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datos bancarios</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #3416d9, #009fe8);
+      color: #fff;
+    }
+
+    .card {
+      width: min(100%, 560px);
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.28);
+      backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 30px;
+    }
+
+    .subtitle {
+      margin: 0 0 24px;
+      text-align: center;
+      color: rgba(255,255,255,.82);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+      padding: 14px 14px 14px 16px;
+      background: #fff;
+      border-radius: 16px;
+      color: #1f2937;
+    }
+
+    .label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #6b7280;
+    }
+
+    .value {
+      font-size: 18px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .copy-btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 15px;
+      background: #12aeea;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .copy-btn:hover {
+      background: #0797ce;
+      transform: translateY(-1px);
+    }
+
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+
+    .notice {
+      min-height: 22px;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    @media (max-width: 460px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .copy-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <h1>Datos para transferencia</h1>
+    <p class="subtitle">Toca “Copiar” para copiar el dato al portapapeles.</p>
+
+    <div class="row">
+      <div>
+        <span class="label">Banco</span>
+        <div class="value" id="banco">Mercado Pago W</div>
+      </div>
+      <button class="copy-btn" onclick="copiar('banco', this)">Copiar</button>
+    </div>
+
+    <div class="row">
+      <div>
+        <span class="label">Beneficiario</span>
+        <div class="value" id="beneficiario">Cinay Barrera Diaz</div>
+      </div>
+      <button class="copy-btn" onclick="copiar('beneficiario', this)">Copiar</button>
+    </div>
+
+    <div class="row">
+      <div>
+        <span class="label">CLABE</span>
+        <div class="value" id="clabe">72296901023994587</div>
+      </div>
+      <button class="copy-btn" onclick="copiar('clabe', this)">Copiar</button>
+    </div>
+
+    <div id="notice" class="notice" aria-live="polite"></div>
+  </main>
+
+  <script>
+    async function copiar(id, boton) {
+      const texto = document.getElementById(id).innerText.trim();
+      const aviso = document.getElementById('notice');
+      const textoOriginal = boton.innerText;
+
+      try {
+        await navigator.clipboard.writeText(texto);
+      } catch (e) {
+        const area = document.createElement('textarea');
+        area.value = texto;
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand('copy');
+        area.remove();
+      }
+
+      boton.innerText = '¡Copiado!';
+      aviso.textContent = texto + ' copiado correctamente.';
+
+      setTimeout(() => {
+        boton.innerText = textoOriginal;
+        aviso.textContent = '';
+      }, 1800);
+    }
+  </script>
+</body>
+</html>
